@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CoastGuard Maritime Rescue</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap --> 
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>     
+
+        <script src="js/Weather.js"></script>
+
+        <!-- Jquery -->
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <!-- Yahoo Weather Api function -->
+        <script>
+            $(document).ready(function () {
+                var CitySearch = CitySearch;
+                var searchtext = "select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + CitySearch + "') and u='c'";
+
+                //change city variable dynamically as required
+                $.getJSON("https://query.yahooapis.com/v1/public/yql?q=" + searchtext + "&format=json").success(function (data) {
+                    console.log(data);
+                    $('#temp').html("Temperature in " + CitySearch + " is " + data.query.results.channel.item.condition.temp + "°C");
+                });
+            });
+
+        </script>
+
+
+        <!--  Accordion call -->
+        <script>
+        <!--  Accordion call -->    
+            $(function () {
+                $("#accordion").accordion()
+            });
+</script>
+
+    </head>
+
+    <body>
+        
+            <!-- firebase database set up -->    
+            <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+            <script>
+                // Initialize Firebase
+                var config = {
+                    apiKey: "AIzaSyCB-1cE2yrjVEK_CLrNqWerONagaelnNGU",
+                    authDomain: "maritime-198516.firebaseapp.com",
+                    databaseURL: "https://maritime-198516.firebaseio.com",
+                    projectId: "maritime-198516",
+                    storageBucket: "maritime-198516.appspot.com",
+                    messagingSenderId: "207568151459"
+                };
+                firebase.initializeApp(config);
+            </script>
+        
+        <!-- Register Modal -->
+        <div id="REG" class="modal">
+            <a  name="Register_Modal"></a>
+            <span onclick="document.getElementById('REG').style.display = 'none'"
+                  class="close" title="close modal">&times;</span>
+
+            <!-- Modal Content -->
+            <form class="modal-content animate" action="/action_page.php">
+                <div class="Modalcontainer">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="uname" required>
+
+                    <label for="uemail"><b>Email</b></label>
+                    <input type="email" placeholder="Enter Email Address" name="uemail" required>
+
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required>
+
+                    <label for="Cpsw"><b>Confirm Password</b></label>
+                    <input type="password" placeholder="Please Confirm your Password" name="Cpsw" required>
+
+                    <div class="cancelcontainer" style="align-content: center ; background-color:#f1f1f1">
+                        <button type="submit">Register</button>
+                        <button type="button" onclick="document.getElementById('REG').style.display = 'none'" class="cancelbtn">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Log on Modal -->
+        <div id="LogON" class="modal">
+            <a name="Login_Modal"></a>
+            <span onclick="document.getElementById('LogON').style.display = 'none'" 
+                  class="close" title="Close Modal">&times;</span>
+
+            <!-- Modal Content -->
+            <form class="modal-content animate" action="/action_page.php">
+                <div class="Modalcontainer">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="uname" required>
+
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required>
+                    <div>
+                        <button type="submit">Login</button>
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                        </label>
+                    </div>
+
+                    <div class="cancelcontainer" style="align-content: center ; background-color:#f1f1f1">
+                        <button type="button" onclick="document.getElementById('REG').style.display = 'block'"  class="Registerbtn">Register</button>
+                        <button type="button" onclick="document.getElementById('LogON').style.display = 'none'" class="cancelbtn">Cancel</button>
+                        <span class="psw"><a href="Reset_Password.html">Forgot password?</a></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        
+
+        <!-- Nav Bar -->
+        <div class="navbar">
+
+            <div class="navbar-inner">
+                <ul class="nav">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="#Wildlife">Wildlife Information</a></li>
+                    <li><a href="#weather">Weather Information</a></li>
+                    <li><a onclick="document.getElementById('LogON').style.display = 'block'">Login</a></li>
+                    <li><a onclick="document.getElementById('REG').style.display = 'block'">Register</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Body -->
+        <div class="jumbotron">
+            <h1>Welcome to the CoastGuard Maritime Dashboard</h1>
+            <P>The purpose of this dashboard is to track users of the CoastGuard Maritime app around the UK Coast.
+            </P>
+            <!-- Open log on modal -->
+            <div class="logon">
+                <button class="btn btn-default btn-large" onclick="document.getElementById('LogON').style.display = 'block'">Login</button>
+
+                <!-- open Register modal -->
+                <button class="btn btn-default btn-large" onclick="document.getElementById('REG').style.display = 'block'">Register</button>
+            </div>
+            <div>
+                <h1 id="test"> </h1>
+            </div>
+        </div>
+
+        <!-- Container Wildlife info -->
+        <div class="jumbotron2">
+            <a name = "wildlife" ></a>
+            <h2>Wildlife Information</h2>   
+
+            <!-- Accordion -->
+            <div id="accordion">
+
+                <!-- England accordion -->
+                <h3 align="center">England</h3>
+                <div>
+                    <p>Links for information on Local wildlife across costal areas of England:</p>
+                    <ul>
+                        <li><a href="http://www.cumbriawildlifetrust.org.uk/">Cumbria</a></li>
+                        <li><a href="http://www.lancswt.org.uk/">Lancs, Mancs, and N. Mersey</a></li>
+                        <li><a href="http://www.cheshirewildlifetrust.org.uk/">Cheshire</a></li>
+                        <li><a href="http://www.avonwildlifetrust.org.uk/">Avon</a></li>
+                        <li><a href="http://www.somersetwildlife.org/">Somerset</a></li>
+                        <li><a href="http://www.devonwildlifetrust.org/">Devon</a></li>
+                        <li><a href="http://www.cornwallwildlifetrust.org.uk/">Cornwall</a></li>
+                        <li><a href="http://www.dorsetwildlifetrust.org.uk/">Dorset</a></li>
+                        <li><a href="http://www.hiwwt.org.uk/">Hampshire & Isle of Wight</a></li>
+                        <li><a href="https://sussexwildlifetrust.org.uk/">Sussex</a></li>
+                        <li><a href="http://www.kentwildlifetrust.org.uk/">Kent</a></li>
+                        <li><a href="http://www.essexwt.org.uk/">Essex</a></li>
+                        <li><a href="http://www.suffolkwildlifetrust.org/">Suffolk</a></li>
+                        <li><a href="http://www.norfolkwildlifetrust.org.uk/home">Norfolk</a></li>
+                        <li><a href="http://www.lincstrust.org.uk/">Lincolnshire</a></li>
+                        <li><a href="http://www.ywt.org.uk/">Yorkshire</a></li>
+                        <li><a href="http://www.teeswildlife.org/">Tees Valley</a></li>
+                        <li><a href="http://durhamwt.com/">Durham</a></li>
+                        <li><a href="http://www.nwt.org.uk/">Northumberland</a></li>
+                    </ul>
+                </div>
+
+                <!-- Scotland accordion -->
+                <h3 align="center">Scotland</h3>
+                <div>
+                    <p>Links for information on Local wildlife across costal areas of Scotland:</p>
+                    <ul>
+                        <li><a href="https://scottishwildlifetrust.org.uk/">Scotland</a></li>
+                    </ul>
+
+                </div>
+                <!-- Wales accordion -->
+                <h3 align="center">Wales</h3>
+                <div>
+                    <p>Links for information on Local wildlife across costal areas of Wales:</p>
+                    <ul>
+                        <li><a href="http://www.northwaleswildlifetrust.org.uk/">North Wales ~ Goladd Cymnu</a></li>
+                        <li><a href="https://www.welshwildlife.org/">South & West Wales ~ De a Gorllewin Cymru </a></li>
+                        <li><a href="http://www.gwentwildlife.org/">Gwent</a></li>
+                    </ul>
+                </div>
+
+                <h3 align="center">Northern Ireland And Republic of Ireland</h3>
+                <div>
+                    <p>Links for information on Local wildlife across the costal areas of Northern Ireland and
+                        the Republic of Ireland:</p>
+                    <ul>
+                        <li><a href="https://www.ulsterwildlife.org/">Ulster Wildlife</a></li>
+                        <li><a href="https://iwt.ie/">Irish Wildlife Trust</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container Weather Info -->.
+        <div class="jumbotron3">
+            <a name="Weather"></a>
+            <div class="row">
+                <h2>Weather Information</h2>
+                <div class="Current_Weather">
+                    <div class="row form-inline">
+                        <h3>Enter City Name</h3>
+                        <input type="text" name="City" id="CitySearch" placeholder="City Name">
+                        <button id="SubmitWeather" class="btn btn-primary" onclick="searchtext">Search City</button>
+                    </div>
+
+                    <div id="showWeather">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer nav bar -->
+        <div class="navbar">
+            <div class="navbar-inner">
+                <ul class="nav">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="#Wildlife">Wildlife Information</a></li>
+                    <li><a href="#weather">Weather Information</a></li>
+                    <li><a onclick="document.getElementById('LogON').style.display = 'block'">Login</a></li>
+                    <li><a onclick="document.getElementById('REG').style.display = 'block'">Register</a></li>
+                </ul>
+            </div>  
+        </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.in.js"></script>
+        <script src="bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    </body>
+</html>
